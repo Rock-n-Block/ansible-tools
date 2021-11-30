@@ -1,0 +1,15 @@
+---
+- name: "Manage Cloudflare DNS record"
+  hosts: localhost
+  tasks:
+    - name: "Update DNS record"
+      cloudflare_dns:
+        api_token: "{{ cloudflare_token }}"
+        zone: "{{ cloudflare_dns_zone }}"
+        record: "{{ server_name }}"
+        type: "A"
+        value: "{{ hostvars[host].ansible_host }}"
+        proxied: yes
+        solo: yes
+      delegate_to: localhost
+ 

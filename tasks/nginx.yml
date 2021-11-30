@@ -1,0 +1,52 @@
+---
+- name: Setup NGINX config
+  hosts: all
+  become: yes
+
+  tasks:
+    - name: Configure SSL
+      include_role:
+        name: geerlingguy.certbot
+      vars:
+        certbot_auto_renew_user: "{{ ansible_user }}"
+        certbot_auto_renew_minute: "20"
+        certbot_auto_renew_hour: "5"
+        certbot_create_if_missing: true
+        certbot_create_standalone_stop_services:
+          - nginx
+        certbot_certs:
+          - domains:
+              - "{{ server_name }}"
+        nginx_vhosts:
+          server_name: "{{ server_name }}"
+      when: configurations[server_name].nginx_port == 443 and configurations[server_name].letsencrypt_ssl == true
+    - name: Setup NGINX config
+      block:
+        - name: Create NGINX config
+          template:
+            src: ../templates/nginx/default.j2
+            dest: "/etc/nginx/conf.d/{{ server_name }}.conf"
+            owner: "{{ ansible_user }}"
+            group: "{{ ansible_user }}"
+            mode: 0644
+        - name: Check NGINX configuration
+          command: nginx -t
+          args:
+            chdir: /etc/nginx/
+          register: config_check
+          ignore_errors: true
+          check_mode: false
+          changed_when: false
+
+        - name: Print NGINX error if syntax check fails
+          debug:
+            var: config_check.stderr_lines
+          failed_when: config_check.rc != 0
+          when:
+            - config_check.stderr_lines is defined
+            - config_check.rc != 0
+
+        - name: Reload NGINX
+          service:
+            name: nginx
+            state: reloaded
