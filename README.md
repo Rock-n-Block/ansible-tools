@@ -1,6 +1,14 @@
-## Ansible Tools
+# Ansible Tools
 
-Create DNS record
+
+## Setup requirements
+
+```bash
+make setup
+```
+
+## Playbooks
+Create DNS record via Cloudflare
 
 ```bash
 make dns server_name=dev.rocknblock.io host=dev3

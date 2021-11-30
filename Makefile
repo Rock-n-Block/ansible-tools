@@ -1,5 +1,8 @@
 hosts_path := hosts.yml
 
+setup:
+	ansible-galaxy install -r requirements.yml
+
 nginx:
 	test $(host)
 	test $(server_name)
