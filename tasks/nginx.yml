@@ -22,10 +22,10 @@
       when: configurations[server_name].nginx_port == 443 and configurations[server_name].letsencrypt_ssl == true
     - name: Setup NGINX config
       block:
-        - name: Create NGINX config
+        - name: Create temp NGINX config
           template:
             src: ../templates/nginx/default.j2
-            dest: "/etc/nginx/conf.d/{{ server_name }}.conf"
+            dest: "/etc/nginx/conf.d/{{ server_name }}.temp.conf"
             owner: "{{ ansible_user }}"
             group: "{{ ansible_user }}"
             mode: 0644
@@ -35,17 +35,22 @@
             chdir: /etc/nginx/
           register: config_check
           ignore_errors: true
-          check_mode: false
-          changed_when: false
-
-        - name: Print NGINX error if syntax check fails
+        - name: Delete temp NGINX config
+          file:
+            path: "/etc/nginx/conf.d/{{ server_name }}.temp.conf"
+            state: absent
+        - name: Print NGINX syntax check output
           debug:
             var: config_check.stderr_lines
           failed_when: config_check.rc != 0
-          when:
-            - config_check.stderr_lines is defined
-            - config_check.rc != 0
-
+          when: config_check.stderr_lines is defined
+        - name: Create NGINX config
+          template:
+            src: ../templates/nginx/default.j2
+            dest: "/etc/nginx/conf.d/{{ server_name }}.conf"
+            owner: "{{ ansible_user }}"
+            group: "{{ ansible_user }}"
+            mode: 0644
         - name: Reload NGINX
           service:
             name: nginx
