@@ -24,11 +24,11 @@ make nginx server_name=dev.rocknblock.io host=dev3
 Example config:
 ```
 all:
-  vars :
+  vars:
     cloudflare_tokens:
       rnb: 'insert-your-token-here'
   hosts:
-    dev3 :
+    dev3:
       ansible_host:
       ansible_user: backend
       configurations:
