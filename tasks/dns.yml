@@ -4,9 +4,9 @@
   tasks:
     - name: "Update DNS record"
       cloudflare_dns:
-        api_token: "{{ cloudflare_token }}"
-        zone: "{{ cloudflare_dns_zone }}"
-        record: "{{ server_name }}"
+        api_token: "{{ cloudflare_tokens[account] }}"
+        zone: "{{ zone }}"
+        record: "{{ record }}"
         type: "A"
         value: "{{ hostvars[host].ansible_host }}"
         proxied: yes
