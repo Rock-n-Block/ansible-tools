@@ -1,2 +1,3 @@
 roles:
-  - name: geerlingguy.certbot
+  - name: rock-n-block.nginx-role
+    src: git+https://github.com/Rock-n-Block/ansible-role-nginx
