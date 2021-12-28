@@ -1,7 +1,7 @@
 hosts_path := hosts.yml
 
 setup:
-	ansible-galaxy install -r requirements.yml
+	ansible-galaxy install -r requirements.yml --force
 
 nginx:
 	test $(host)
@@ -14,3 +14,8 @@ dns:
 	test $(zone)
 	test $(account)
 	$(ansible_cfg) ansible-playbook -i=$(hosts_path) tasks/dns.yml --extra-vars "record=$(record) zone=$(zone) host=$(host) account=$(account)"
+
+
+deps:
+	test $(host)
+	$(ansible_cfg) ansible-playbook -i=$(hosts_path) -l $(host) tasks/deps.yml

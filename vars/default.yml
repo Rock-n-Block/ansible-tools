@@ -1,0 +1,10 @@
+default_packages:
+  - nginx
+  - firewalld
+  - git
+  - nano
+  - vim
+  - python3-dev
+  - make
+default_deps:
+  - docker

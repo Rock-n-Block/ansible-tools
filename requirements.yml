@@ -1,3 +1,5 @@
 roles:
   - name: rock-n-block.nginx-role
     src: git+https://github.com/Rock-n-Block/ansible-role-nginx
+  - name: rock-n-block.docker-role
+    src: git+https://github.com/Rock-n-Block/ansible-role-docker

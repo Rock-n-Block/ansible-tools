@@ -1,0 +1,47 @@
+---
+- name: Install deployment dependencies
+  hosts: all
+  become: yes
+  vars_files:
+  - "../vars/default.yml"
+
+  tasks:
+    - name: Include vars
+      include_vars: "../vars/{{ inventory_hostname }}.yml"
+      when: "'../vars/{{ inventory_hostname }}.yml' is exists"
+    - name: Install Docker & docker-compose
+      include_role:
+        name: rock-n-block.docker-role
+      when: "'docker' in {{ deps|default(default_deps) }}"
+    - name: Update packanges
+      package: upgrade=yes
+    - name: install package dependencies
+      package: name={{ item }} state=present
+      with_items: "{{ packages|default(default_packages) }}"
+    - name: Enable NGINX service
+      systemd:
+        name: nginx
+        state: started
+        enabled: yes
+      when: "'nginx' in {{ packages|default(default_packages) }}"
+    - name: FirewallD
+      block:
+        - name: FirewallD - Enable service
+          systemd:
+            name: firewalld
+            state: started
+            enabled: yes
+        - name: FirewallD - Enable SSH
+          shell: firewall-cmd --add-service=ssh
+        - name: FirewallD - Enable ports
+          shell: firewall-cmd --add-port={{ item }}/tcp
+          with_items: "{{ ports }}"
+          when: ports is defined
+        - name: FirewallD - Enable NGINX ports
+          shell: firewall-cmd --add-port={{ item.port }}/tcp
+          with_items: "{{ nginx_confs.values() }}"
+          when: nginx_confs is defined
+        - name: FirewallD - Make configuration permanent
+          shell: firewall-cmd --runtime-to-permanent
+      when: "'firewalld' in {{ packages|default(default_packages) }}"
+    
