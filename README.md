@@ -8,6 +8,11 @@ make setup
 ```
 
 ## Playbooks
+Install deployment dependencies
+```bash
+make deps host=dev3
+```
+
 Create DNS record via Cloudflare
 
 ```bash
