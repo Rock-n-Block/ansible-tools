@@ -13,6 +13,11 @@ Install deployment dependencies
 make deps host=dev3
 ```
 
+Setup firewall
+```bash
+make firewall host=dev3
+```
+
 Create DNS record via Cloudflare
 
 ```bash
@@ -25,49 +30,63 @@ Deploy NGINX config
 make nginx server_name=dev.rocknblock.io host=dev3
 ```
 
-# hosts.yml 
-Example config:
+# Configuration 
+1. Create `hosts.yml` with hosts credentials:
 ```
 all:
-  vars:
-    cloudflare_tokens:
-      rnb: 'insert-your-token-here'
   hosts:
     dev3:
       ansible_host:
       ansible_user: backend
-      configurations:
-        devless.mywish.io:
-          backend_path_remote: /home/backend/bridge_backend
-          docker_expose_port: 9075
-          nginx_port: 443
-          letsencrypt_ssl: true
-          http_redirect: true
-          certbot_admin_email: example@gmail.com
-        dev-ydr-bridge.rocknblock.io:
-          backend_path_remote: /home/backend/bridge_backend_ydr
-          docker_expose_port: 8777
-          nginx_port: 443
-          ssl_certificate: /etc/ssl/certs/rocknblock.io/fullchain.pem
-          ssl_certificate_key: /etc/ssl/certs/rocknblock.io/privkey.pem
-          letsencrypt_ssl : false
-          http_redirect: true
+    dev4:
+      ansible_host: 
+      ansible_user: ubuntu
+```
+2. Create vars file `vars/<hostname from hosts.yml>.yml` for hosts where it is needed. Example: `vars/dev3.yml`:
+```
+nginx_confs:
+  dev-project1.rocknblock.io:
+    port: 443
+    ssl_certificate: /etc/ssl/certs/rocknblock.io/fullchain.pem
+    ssl_certificate_key: /etc/ssl/certs/rocknblock.io/privkey.pem
+    http_redirect: true
+    locations:
+      /: 
+        try_files: yes 
+      /api/v1/:
+        allow_cors: yes
+        proxy_port: 8001
+      /django-admin/:
+        proxy_port: 8001
+      /django-static/:
+        alias: "/home/backend/project1_backend/static/"
+      /media/:
+        alias: "/home/backend/project1_backend/media/"
+     
+  dev-project2.rocknblock.io:
+    port: 443
+    ssl_certificate: /etc/ssl/certs/rocknblock.io/fullchain.pem
+    ssl_certificate_key: /etc/ssl/certs/rocknblock.io/privkey.pem
+    http_redirect: true
+    locations:
+      /: 
+        try_files: yes 
+      /api/v1/:
+        allow_cors: yes
+        proxy_port: 8002
+      /django-admin/:
+        proxy_port: 8002
+      /django-static/:
+        alias: "/home/backend/project2_backend/static/"
+      /media/:
+        alias: "/home/backend/project2_backend/media/"
+      
+```
+3. Create `vars/local.yml` for general local settings. Example:
+```
+cloudflare_tokens:
+  mywish: your_token_id_here
+  rnb: your_token_id_here
 ```
 
-# configurations
-The following variables are supported:
-* `nginx_port` **required** (Example: 443)
 
-    NGINX internal port
-
- * `frontend_path_remote`  (Example: `/var/www/frontend`)
-
-    Remote frontend static build directory
-
- * `backend_path_remote` (Example: `/var/www/backend`)
-
-    Remote backend files directory, used to determine the Django static path
-
- * `letsencrypt_ssl` (Example: `yes`)
-
-    Create Let's Encrypt Free SSL cerificate if `yes` and `nginx_port` is 443
