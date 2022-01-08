@@ -1,6 +1,10 @@
 ---
 - name: Setup NGINX config
   hosts: all
-  vars_files: "../vars/{{ inventory_hostname }}.yml"
-  roles:
-     - { role: rock-n-block.nginx-role, become: yes }
+  become: yes  
+  tasks:
+    - name: Include vars
+      include_tasks: ../tasks/include_vars.yml
+    - name: Setup NGINX config
+      include_role: 
+        name: rock-n-block.nginx-role
