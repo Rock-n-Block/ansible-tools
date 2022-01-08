@@ -1,7 +1,10 @@
 ---
 - name: "Manage Cloudflare DNS record"
   hosts: localhost
+ 
   tasks:
+    - name: Include vars
+      include_tasks: ../tasks/include_vars.yml
     - name: "Update DNS record"
       cloudflare_dns:
         api_token: "{{ cloudflare_tokens[account] }}"
