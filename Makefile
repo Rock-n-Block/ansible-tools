@@ -1,7 +1,8 @@
 hosts_path := hosts.yml
+ansible_cfg := ANSIBLE_CONFIG=$(shell pwd)/ansible.cfg
 
 setup:
-	ansible-galaxy install -r requirements.yml --force
+	$(ansible_cfg) ansible-galaxy install -r requirements.yml --force
 
 nginx:
 	test $(host)
@@ -18,4 +19,8 @@ dns:
 
 deps:
 	test $(host)
-	$(ansible_cfg) ansible-playbook -i=$(hosts_path) -l $(host) tasks/deps.yml
+	$(ansible_cfg) ansible-playbook -i=$(hosts_path) -l $(host) playbooks/deps.yml
+
+firewall:
+	test $(host)
+	$(ansible_cfg) ansible-playbook -i=$(hosts_path) -l $(host) playbooks/firewall.yml

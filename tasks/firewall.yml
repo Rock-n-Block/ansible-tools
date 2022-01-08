@@ -1,0 +1,18 @@
+---
+- name: FirewallD - Enable service
+  systemd:
+    name: firewalld
+    state: started
+    enabled: yes
+- name: FirewallD - Enable SSH
+  shell: firewall-cmd --add-service=ssh
+- name: FirewallD - Enable ports
+  shell: firewall-cmd --add-port={{ item }}/tcp
+  with_items: "{{ ports }}"
+  when: ports is defined
+- name: FirewallD - Enable NGINX ports
+  shell: firewall-cmd --add-port={{ item.port }}/tcp
+  with_items: "{{ nginx_confs.values() }}"
+  when: nginx_confs is defined
+- name: FirewallD - Make configuration permanent
+  shell: firewall-cmd --runtime-to-permanent

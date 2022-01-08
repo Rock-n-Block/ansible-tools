@@ -1,0 +1,9 @@
+- name: Include default vars
+  include_vars: "../vars/default.yml"
+  when: "'vars/default.yml' is exists"
+- name: Include local vars
+  include_vars: "../vars/local.yml"
+  when: "'vars/local.yml' is exists"
+- name: Include host vars
+  include_vars: "../vars/{{ inventory_hostname }}.yml"
+  when: "'vars/{{ inventory_hostname }}.yml' is exists"
