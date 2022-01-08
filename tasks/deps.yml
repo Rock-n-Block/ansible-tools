@@ -9,12 +9,20 @@
     - name: Include vars
       include_vars: "../vars/{{ inventory_hostname }}.yml"
       when: "'../vars/{{ inventory_hostname }}.yml' is exists"
-    - name: Install Docker & docker-compose
-      include_role:
-        name: rock-n-block.docker-role
-      when: "'docker' in {{ deps|default(default_deps) }}"
-    - name: Update packanges
-      package: upgrade=yes
+    - name: Update package cache
+      block:
+        - name: Update package cache (apt/Ubuntu)
+          apt:
+            update_cache: yes
+          when: ansible_distribution == "Ubuntu"
+        - name: Update package cache (dnf/CentOS)
+          dnf:
+            update_cache: yes
+          when: ansible_distribution == "CentOS"
+        - name: Update package cache (yum/Amazon)
+          yum:
+            update_cache: yes
+          when: ansible_distribution == "Amazon"
     - name: install package dependencies
       package: name={{ item }} state=present
       with_items: "{{ packages|default(default_packages) }}"
@@ -23,7 +31,11 @@
         name: nginx
         state: started
         enabled: yes
-      when: "'nginx' in {{ packages|default(default_packages) }}"
+      when: "'nginx' in packages|default(default_packages)"
+    - name: Install Docker & docker-compose
+      include_role:
+        name: rock-n-block.docker-role
+      when: "'docker' in deps|default(default_deps)"
     - name: FirewallD
       block:
         - name: FirewallD - Enable service
@@ -43,5 +55,5 @@
           when: nginx_confs is defined
         - name: FirewallD - Make configuration permanent
           shell: firewall-cmd --runtime-to-permanent
-      when: "'firewalld' in {{ packages|default(default_packages) }}"
+      when: "'firewalld' in packages|default(default_packages)"
     
