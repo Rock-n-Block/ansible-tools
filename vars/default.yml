@@ -6,5 +6,6 @@ default_packages:
   - vim
   - python3-dev
   - make
+  - unzip
 default_deps:
   - docker
