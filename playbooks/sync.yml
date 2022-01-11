@@ -1,0 +1,33 @@
+---
+- name: Install deployment dependencies
+  hosts: all
+  tasks:
+    - name: Include vars
+      include_tasks: ../tasks/include_vars.yml
+  
+    - name: Set extract directory name
+      set_fact: 
+        extract_dir: "{{ builds_path }}/{{ src.split('.') | first }}"
+    
+    - name: Create directory to extract
+      file:
+        path: "{{ extract_dir }}"
+        state: directory
+      delegate_to: localhost
+
+    - name: Extract archive
+      ansible.builtin.unarchive:
+        src: "{{ builds_path }}/{{ src }}"
+        dest: "{{ extract_dir }}"
+      delegate_to: localhost
+
+    - name: Create remote directory
+      file:
+        path: "{{ nginx_confs[server_name].root_path }}"
+        state: directory
+
+    - name: Sync files 
+      become: yes
+      ansible.posix.synchronize:
+        src: "{{ extract_dir }}/{{ dir }}/"
+        dest: "{{ nginx_confs[server_name].root_path }}"

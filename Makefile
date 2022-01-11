@@ -24,3 +24,9 @@ deps:
 firewall:
 	test $(host)
 	$(ansible_cfg) ansible-playbook -i=$(hosts_path) -l $(host) playbooks/firewall.yml
+
+sync:
+	test $(host)
+	test $(src)
+	test $(server_name)
+	$(ansible_cfg) ansible-playbook -i=$(hosts_path) -l $(host) playbooks/sync.yml --extra-vars "src=$(src) server_name=$(server_name) dir=$(dir)"

@@ -30,6 +30,21 @@ Deploy NGINX config
 make nginx server_name=dev.rocknblock.io host=dev3
 ```
 
+Deploy frontend static files from archive 
+
+(you should specify **builds_path** in **local.yml** to use this role!)
+ 
+Parameters:
+* src - archieve name
+* dir (optional) - directiry from archieve content to deploy files from (often the archive contains a nested **build/** folder with the build content )
+
+
+```bash
+make sync host=dev3 server_name=dev.rocknblock.io src=rnb_build_2.zip dir=build
+```
+
+
+
 # Configuration 
 1. Create `hosts.yml` with hosts credentials:
 ```
@@ -87,6 +102,7 @@ nginx_confs:
 cloudflare_tokens:
   mywish: your_token_id_here
   rnb: your_token_id_here
+builds_path: /home/ubuntu/builds
 ```
 
 
