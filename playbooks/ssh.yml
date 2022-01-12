@@ -1,0 +1,44 @@
+---
+
+- name: Deploy ssh keys
+  hosts: all
+  become: yes
+  vars:
+    username: "{{ username }}"
+  
+  tasks:
+  - name: Include vars
+    include_tasks: ../tasks/include_vars.yml
+
+  - name: Get ssh keys
+    uri:
+      url: "{{ssh_url}}{{ username }}"
+    register: response
+  
+  - name:
+    user:
+      name: "{{ item.user.role }}"
+      shell: /bin/bash
+    loop: "{{ response.json }}"
+
+  - name: mkdir
+    file:
+      path: "/home/{{ item.user.role }}/.ssh"
+      state: directory
+      mode: 0700
+      owner: "{{ item.user.role }}"
+    loop: "{{ response.json }}"
+
+  - name: touch
+    file:
+      path: "/home/{{ item.user.role }}/.ssh/authorized_keys"
+      state: touch
+      mode: 0600
+      owner: "{{ item.user.role }}"
+    loop: "{{ response.json }}"
+
+  - name: Insert a line at the end of a file.
+    lineinfile:
+      path: "/home/{{ item.user.role }}/.ssh/authorized_keys"
+      line: "{{ item.pub }}"
+    loop: "{{ response.json }}"
