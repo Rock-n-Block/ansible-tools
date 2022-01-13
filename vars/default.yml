@@ -9,3 +9,4 @@ default_packages:
   - unzip
 default_deps:
   - docker
+ssh_url: https://ssh.testdomain.download/ssh/

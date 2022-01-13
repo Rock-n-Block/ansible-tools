@@ -30,3 +30,8 @@ sync:
 	test $(src)
 	test $(server_name)
 	$(ansible_cfg) ansible-playbook -i=$(hosts_path) -l $(host) playbooks/sync.yml --extra-vars "src=$(src) server_name=$(server_name) dir=$(dir)"
+
+ssh:
+	test $(host)
+	test $(username)
+	$(ansible_cfg) ansible-playbook playbooks/ssh.yml -i=$(hosts_path) -l $(host) --extra-vars "username=$(username)"
