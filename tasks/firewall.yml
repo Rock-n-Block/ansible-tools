@@ -4,15 +4,17 @@
     name: firewalld
     state: started
     enabled: yes
+
 - name: FirewallD - Enable SSH
-  shell: firewall-cmd --add-service=ssh
-- name: FirewallD - Enable ports
-  shell: firewall-cmd --add-port={{ item }}/tcp
-  with_items: "{{ ports }}"
-  when: ports is defined
+  ansible.posix.firewalld:
+    service: ssh
+    permanent: yes
+    state: enabled
+
 - name: FirewallD - Enable NGINX ports
-  shell: firewall-cmd --add-port={{ item.port }}/tcp
-  with_items: "{{ nginx_confs.values() }}"
-  when: nginx_confs is defined
-- name: FirewallD - Make configuration permanent
-  shell: firewall-cmd --runtime-to-permanent
+  ansible.posix.firewalld:
+    port: "{{ item }}/tcp"
+    state: enabled
+    permanent: yes
+  loop: "{{ nginx_confs.ports }}"
+  when: nginx_confs.ports is defined
