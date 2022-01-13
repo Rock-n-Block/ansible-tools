@@ -1,28 +1,27 @@
 ---
 
-- name: Deploy ssh keys
+- name: Deploy ssh keys to server
   hosts: all
   become: yes
-  vars:
-    username: "{{ username }}"
   
   tasks:
   - name: Include vars
     include_tasks: ../tasks/include_vars.yml
 
-  - name: Get ssh keys
+  - name: Get ssh keys from API
     uri:
-      url: "{{ssh_url}}{{ username }}"
+      url: "{{ ssh_url + username if username != '' else ssh_url + 'role/' + role }}"
     register: response
+    when: (username != '') or (role != '')
 
-  - name:
+  - name: Create group
     ansible.builtin.group:
       name: "{{ item.user.role }}"
       state: present
     loop: "{{ response.json }}"
     when: response.json is defined
 
-  - name:
+  - name: Create user
     user:
       name: "{{ item.user.role }}"
       shell: /bin/bash
@@ -33,32 +32,34 @@
     loop: "{{ response.json }}"
     when: response.json is defined
 
-  - name: Insert a line at the end of a file.
+  - name: Add user to sudoers
     lineinfile:
       path: "/etc/sudoers"
       line: "{{ item.user.role }} ALL=(ALL) NOPASSWD: ALL"
     loop: "{{ response.json }}"
     when: (response.json is defined and item.user.role in ['backend', 'devops'])
 
-  - name: mkdir
+  - name: Make dir .ssh
     file:
       path: "/home/{{ item.user.role }}/.ssh"
       state: directory
       mode: 0700
       owner: "{{ item.user.role }}"
+      group: "{{ item.user.role }}"
     loop: "{{ response.json }}"
     when: response.json is defined
 
-  - name: touch
+  - name: touch authorized_keys
     file:
       path: "/home/{{ item.user.role }}/.ssh/authorized_keys"
       state: touch
       mode: 0600
       owner: "{{ item.user.role }}"
+      group: "{{ item.user.role }}"
     loop: "{{ response.json }}"
     when: response.json is defined
 
-  - name: Insert a line at the end of a file.
+  - name: Add ssh to authorized_keys.
     lineinfile:
       path: "/home/{{ item.user.role }}/.ssh/authorized_keys"
       line: "{{ item.pub }}"
