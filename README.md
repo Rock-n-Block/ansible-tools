@@ -65,6 +65,7 @@ nginx_confs:
     ssl_certificate: /etc/ssl/certs/rocknblock.io/fullchain.pem
     ssl_certificate_key: /etc/ssl/certs/rocknblock.io/privkey.pem
     http_redirect: true
+    root_path: /var/www/project1_frontend/
     locations:
       /: 
         try_files: yes 
@@ -83,6 +84,7 @@ nginx_confs:
     ssl_certificate: /etc/ssl/certs/rocknblock.io/fullchain.pem
     ssl_certificate_key: /etc/ssl/certs/rocknblock.io/privkey.pem
     http_redirect: true
+    root_path: /var/www/project2_frontend/
     locations:
       /: 
         try_files: yes 
