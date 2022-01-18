@@ -16,14 +16,16 @@
     port: "{{ item.port }}/tcp"
     state: enabled
     permanent: yes
+    immediate: yes
   loop: "{{ nginx_confs.values() }}"
   when: nginx_confs.ports is defined
 
-- name: FirewallD - Enable NGINX ports
+- name: FirewallD - Enable ports
   ansible.posix.firewalld:
     port: "{{ item }}/tcp"
     state: enabled
     permanent: yes
+    immediate: yes
   loop: "{{ ports }}"
   when: ports is defined
 
