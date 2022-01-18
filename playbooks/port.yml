@@ -1,0 +1,52 @@
+---
+
+- name: change ssh port
+  hosts: all
+  become: yes
+
+  tasks:
+    - name: Include vars
+      include_tasks: ../tasks/include_vars.yml
+
+    - name: delete old config of ssh
+      ignore_errors: yes
+      file:
+        state: absent
+        path: /etc/ssh/sshd_config.d/ssh.conf
+
+    - name: Create config of ssh
+      file:
+        state: touch
+        path: /etc/ssh/sshd_config.d/ssh.conf
+    
+    - name: Change ssh.conf
+      ansible.builtin.lineinfile:
+        path: /etc/ssh/sshd_config.d/ssh.conf
+        line: 'Port {{ssh_port}}'
+        
+    - name: Copy config of firewalld ssh service
+      ansible.builtin.copy:
+        src: /usr/lib/firewalld/services/ssh.xml
+        dest: /etc/firewalld/services/ssh.xml
+        force: no
+        owner: root
+        group: root
+        mode: 0644
+        remote_src: yes
+
+    - name: Change config of firewalld ssh service
+      ansible.builtin.lineinfile:
+        path: /etc/firewalld/services/ssh.xml
+        regexp: '<port protocol="tcp" port="(.*)"/>'
+        firstmatch: yes
+        line: '  <port protocol="tcp" port="{{ ssh_port }}"/>'
+
+    - name: Restart sshd 
+      systemd:
+        name: ssh
+        state: restarted
+
+    - name: Restart firewalld 
+      systemd:
+        name: firewalld
+        state: restarted

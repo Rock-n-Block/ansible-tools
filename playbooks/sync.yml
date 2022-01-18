@@ -22,6 +22,7 @@
       delegate_to: localhost
 
     - name: Create remote directory
+      become: yes
       file:
         path: "{{ nginx_confs[server_name].root_path }}"
         state: directory
