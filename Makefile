@@ -25,8 +25,14 @@ firewall:
 	test $(host)
 	$(ansible_cfg) ansible-playbook -i=$(hosts_path) -l $(host) playbooks/firewall.yml
 
-sync:
+sync-zip:
 	test $(host)
 	test $(src)
 	test $(server_name)
-	$(ansible_cfg) ansible-playbook -i=$(hosts_path) -l $(host) playbooks/sync.yml --extra-vars "src=$(src) server_name=$(server_name) dir=$(dir)"
+	$(ansible_cfg) ansible-playbook -i=$(hosts_path) -l $(host) playbooks/sync_zip.yml --extra-vars "src=$(src) server_name=$(server_name) dir=$(dir)"
+
+sync-dir:
+	test $(host)
+	test $(src)
+	test $(dest)
+	$(ansible_cfg) ansible-playbook -i=$(hosts_path) -l $(host) playbooks/sync_dir.yml --extra-vars "src=$(src) dest=$(dest)"

@@ -1,0 +1,17 @@
+---
+- name: Install deployment dependencies
+  hosts: all
+  tasks:
+    - name: Include vars
+      include_tasks: ../tasks/include_vars.yml
+  
+    - name: Create remote directory
+      file:
+        path: "{{ dest }}"
+        state: directory
+
+    - name: Sync files 
+      become: yes
+      ansible.posix.synchronize:
+        src: "{{ src }}/"
+        dest: "{{ dest }}"
