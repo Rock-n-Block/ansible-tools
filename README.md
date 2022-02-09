@@ -30,6 +30,12 @@ Deploy NGINX config
 make nginx server_name=dev.rocknblock.io host=dev3
 ```
 
+Sync directories
+ 
+```bash
+make sync-dir host=dev3 src=/home/user/nodes dest=/home/backend/nodes
+```
+
 Deploy frontend static files from archive 
 
 (you should specify **builds_path** in **local.yml** to use this role!)
@@ -40,7 +46,7 @@ Parameters:
 
 
 ```bash
-make sync host=dev3 server_name=dev.rocknblock.io src=rnb_build_2.zip dir=build
+make sync-zip host=dev3 server_name=dev.rocknblock.io src=rnb_build_2.zip dir=build
 ```
 
 
