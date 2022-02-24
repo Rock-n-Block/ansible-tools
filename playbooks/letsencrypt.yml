@@ -10,6 +10,7 @@
   tasks:
     - name: Include vars
       include_tasks: ../tasks/include_vars.yml
+
     - name: set var
       set_fact:
         config: "{{ nginx_confs[server_name] }}"
@@ -23,9 +24,6 @@
       template:
         src: nginx-default.j2
         dest: /etc/nginx/sites-enabled/default
-
-    - name: Reload nginx to activate letsencrypt site
-      service: name=nginx state=restarted
 
     - name: Create letsencrypt certificate
       shell: letsencrypt certonly -n --webroot -w /var/www/letsencrypt -m {{ letsencrypt_email }} --agree-tos -d {{ server_name }}
