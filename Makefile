@@ -36,3 +36,8 @@ sync-dir:
 	test $(src)
 	test $(dest)
 	$(ansible_cfg) ansible-playbook -i=$(hosts_path) -l $(host) playbooks/sync_dir.yml --extra-vars "src=$(src) dest=$(dest)"
+
+le-nginx:
+	test $(host)
+	test $(server_name)
+	$(ansible_cfg) ansible-playbook -i=$(hosts_path) -l $(host) playbooks/letsencrypt.yml --extra-vars "server_name=$(server_name) letsencrypt_email=$(email)"
