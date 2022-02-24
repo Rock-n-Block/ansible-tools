@@ -4,10 +4,11 @@
   gather_facts: no
   hosts: all
 
-  pre_tasks:
-    - raw: apt-get install -y python-simplejson
-
   tasks:
+    - name: install package dependencies
+      package:
+        name: letsencrypt
+
     - name: Include vars
       include_tasks: ../tasks/include_vars.yml
 
@@ -24,6 +25,11 @@
       template:
         src: nginx-default.j2
         dest: /etc/nginx/sites-enabled/default
+
+    - name: Reload nginx to activate acme challenge
+      service:
+        name: nginx
+        state: restarted
 
     - name: Create letsencrypt certificate
       shell: letsencrypt certonly -n --webroot -w /var/www/letsencrypt -m {{ letsencrypt_email }} --agree-tos -d {{ server_name }}
