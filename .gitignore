@@ -1,3 +1,10 @@
 hosts.yml
 vars/*
 !vars/default.yml
+
+terraform.tfvars
+*.auto.tfvars
+*.tfstate
+*.tfstate.backup
+.terraform/
+terraform.tfstate.d
