@@ -1,10 +1,12 @@
-hosts.yml
-vars/*
-!vars/default.yml
+ansible/hosts.yml
+ansible/vars/*
+!ansible/vars/default.yml
 
-terraform.tfvars
-*.auto.tfvars
-*.tfstate
-*.tfstate.backup
-.terraform/
-terraform.tfstate.d
+**.tfstate
+**.tfstate.backup
+**.tfvars
+**.auto.tfvars
+**terraform.tfstate.d
+**.terraform
+
+!**vars-example.tfvars
