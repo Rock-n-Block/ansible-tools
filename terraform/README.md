@@ -112,14 +112,6 @@ make workspace_new module=<name_of_module> workspace=<name_of_workspace>
 By default, password-protected (encrypted) private ssh keys are not supported in Terraform
 But, if you use such key and some sort of ssh agent, you can set variable `ssh_agent_support = true` to utilize ssh agent
 
-
-#### Ansible Hosts file
-
-After running `make apply module=ec2-base`, Terraform will create Ansible-compatible hosts file. It will be stored in `ec2-base/generated-hosts.yml`. You can take contents of this file and append to your local hosts file.
-Be careful: file will be overwritten each time after issuing `make apply`
-
-
-
 #### Importing existing keys
 
 If you changing state, but SSH key was already created on AWS, Terraform will create error.
@@ -127,3 +119,18 @@ In order to make it work with already imported key, you need to refresh your loc
 ```bash
 make import_key module=<namme_of_module> aws_key_pair.deployer deployer-key
 ```
+
+#### Ansible Hosts file
+
+After running `make apply module=ec2-base`, Terraform will create Ansible-compatible hosts file. It will be stored in `ec2-base/generated-hosts.yml`. You can take contents of this file and append to your local hosts file.
+Be careful: file will be overwritten each time after issuing `make apply`
+
+#### Running Ansible dependencies installation
+
+Set variable `run_ansible_deps: true' to run dependencies installation through Ansible
+
+### Terraform ec2-node-eth module description
+
+Similar to ec2-base module, differences are:
+ - Changed default values for instance type, volume sizes
+ - Added secondary storage device
