@@ -36,7 +36,7 @@ terraform apply -var-file="testing.tfvars"
 `vars_file` - file of Terraform variables (must be places in this directory)
 
 Available modules:
- - ec2-general
+ - ec2-base
 
 Validate configuration
 ```bash
@@ -88,10 +88,10 @@ make workspace_new module=<name_of_module> workspace=<name_of_workspace>
 
 ## Avaiable modules
 
-- `ec2-general` - module for deploying customisable EC2 instances
+- `ec2-base` - module for deploying customisable EC2 instances
 
 
-### Terraform EC2-General module description
+### Terraform ec2-base module description
 
 #### Supported features
 - EC2 deployment
@@ -116,7 +116,7 @@ But, if you use such key and some sort of ssh agent, you can set variable `ssh_a
 
 #### Ansible Hosts file
 
-After running `make apply module=ec2-general`, Terraform will create Ansible-compatible hosts file. It will be stored in `ec2-general/generated-hosts.yml`. You can take contents of this file and append to your local hosts file.
+After running `make apply module=ec2-base`, Terraform will create Ansible-compatible hosts file. It will be stored in `ec2-base/generated-hosts.yml`. You can take contents of this file and append to your local hosts file.
 Be careful: file will be overwritten each time after issuing `make apply`
 
 

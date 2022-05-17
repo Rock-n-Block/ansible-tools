@@ -156,6 +156,6 @@ resource "null_resource" "ansible_provision" {
   
   # And only after SSH connection, Ansible will be executed
   provisioner "local-exec" {
-    command = "cd ../../ansible && make deps hosts_path=../terraform/ec2-general/generated-hosts.yml host='${aws_instance.app_server.tags["canonical_name"]}'"
+    command = "cd ../../ansible && make deps hosts_path=../terraform/ec2-base/generated-hosts.yml host='${aws_instance.app_server.tags["canonical_name"]}'"
   }
 }
