@@ -43,19 +43,19 @@ variable "ssh_agent_support" {
 variable "instance_ami" {
   description = "Value of Instance AMI for the EC2 instance"
   type        = string
-  default     = "ami-0fb653ca2d3203ac1" # Ubuntu 20.04 x64 (us-east-2)
+  default     = "ami-008e02c1f94100fd9" # Ubuntu 20.04 ARM64 (us-east-2)
 }
 
 variable "instance_type" {
   description = "Value of Instance Type for the EC2 instance"
   type        = string
-  default     = "t2.micro"
+  default     = "c6g.xlarge"
 }
 
 variable "instance_name" {
   description = "Value of the Name tag for the EC2 instance"
   type        = string
-  default     = "Terraform App Server"
+  default     = "Geth Node"
 }
 
 variable "instance_organization" {
@@ -65,9 +65,9 @@ variable "instance_organization" {
 }
 
 variable "security_rules_ports" {
-  description = "Listt of ports to apply in security rules"
+  description = "List of ports to apply in security rules"
   type        = list(any)
-  default     = [22, 80, 443]
+  default     = [22, 80, 443, 8545, 8546]
 }
 
 variable "root_block_device" {
@@ -79,10 +79,26 @@ variable "root_block_device" {
     throughput = number
   })
   default = {
-    volume_type = "gp2"
-    volume_size = 30
-    iops = 3000
-    throughput = 125
+    volume_type = "gp3"
+    volume_size = 80
+    iops = 4000
+    throughput = 350
+  }
+}
+
+variable "storage_block_device" {
+  description = "Values of parameters for root disk"
+  type = object({
+    volume_type = string
+    volume_size = number
+    iops = number
+    throughput = number
+  })
+  default = {
+    volume_type = "gp3"
+    volume_size = 800
+    iops = 4000
+    throughput = 350
   }
 }
 

@@ -34,9 +34,7 @@ terraform apply -var-file="testing.tfvars"
 ### Deployment commands
 
 `vars_file` - file of Terraform variables (must be places in this directory)
-
-Available modules:
- - ec2-base
+`name_of_module` - name of module to use (listed below)
 
 Validate configuration
 ```bash
@@ -89,6 +87,7 @@ make workspace_new module=<name_of_module> workspace=<name_of_workspace>
 ## Avaiable modules
 
 - `ec2-base` - module for deploying customisable EC2 instances
+- `ec2-node-eth` - module for deploying customisable EC2 instances that is specialized on running Go-Ethereum nodes
 
 
 ### Terraform ec2-base module description
