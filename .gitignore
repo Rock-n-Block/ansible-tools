@@ -8,5 +8,6 @@ ansible/vars/*
 **.auto.tfvars
 **terraform.tfstate.d
 **.terraform
+**generated-hosts.yml
 
 !**vars-example.tfvars

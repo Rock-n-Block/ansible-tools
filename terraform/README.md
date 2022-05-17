@@ -98,17 +98,19 @@ make destroy module=<name_of_module> vars=<vars_file>
 
 Workspaces are needed to operate current Terraform state
 
+**Notice:** workspaces for each submodule stored separately in module folder. 
+
 List workspaces
 ```bash
-make workspace_list <name_of_workspace>
+make workspace_list module=<name_of_module> workspace=<name_of_workspace>
 ```
 
 Change workspace
 ```bash
-make workspace_select <name_of_workspace>
+make workspace_select module=<name_of_module> workspace=<name_of_workspace>
 ```
 
 Create new workspace
 ```bash
-make workspace_new <name_of_workspace>
+make workspace_new module=<name_of_module> workspace=<name_of_workspace>
 ```
