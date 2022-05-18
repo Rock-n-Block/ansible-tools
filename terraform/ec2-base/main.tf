@@ -9,6 +9,10 @@ terraform {
   required_version = ">= 0.14.9"
 }
 
+locals {
+  module_name = "ec2-base"
+}
+
 provider "aws" {
   region  = var.aws_region
   profile = var.aws_profile_name
@@ -18,7 +22,7 @@ provider "aws" {
 }
 
 resource "aws_key_pair" "deployer" {
-  key_name = "deployer-key"
+  key_name = "deployer-key-${local.module_name}"
   public_key = file(var.instance_ssh_key_file)
 }
 
@@ -133,9 +137,16 @@ resource "local_file" "ansible_hosts" {
         }
       }
     })
-    filename = "generated-hosts.yml"
+    filename = "tfgenhosts-${aws_instance.app_server.tags["canonical_name"]}-${aws_instance.app_server.id}.yml"
     file_permission = "0644"
     directory_permission = "0775"
+
+    provisioner "local-exec" {
+      command = "cat $FILENAME | tr -d '\"' > $FILENAME.new && mv -f $FILENAME.new $FILENAME"
+      environment = {
+        FILENAME = local_file.ansible_hosts.filename
+      }
+    }
 }
 
 resource "null_resource" "ansible_provision" {
@@ -157,6 +168,12 @@ resource "null_resource" "ansible_provision" {
   
   # And only after SSH connection, Ansible will be executed
   provisioner "local-exec" {
-    command = "cd ../../ansible && make deps hosts_path=../terraform/ec2-base/generated-hosts.yml host='${aws_instance.app_server.tags["canonical_name"]}'"
+    command = "cd $ANSIBLE_PATH && make $ANSIBLE_COMMAND hosts_path=$HOSTS_PATH host=$HOST"
+    environment = {
+      ANSIBLE_PATH = "../../ansible"
+      ANSIBLE_COMMAND = "deps"
+      HOSTS_PATH = "../terraform/${local.module_name}/${local_file.ansible_hosts.filename}"
+      HOST = "'${aws_instance.app_server.tags["canonical_name"]}'"
+    }
   }
 }
