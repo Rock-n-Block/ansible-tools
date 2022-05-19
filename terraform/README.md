@@ -23,6 +23,7 @@ cp vars-example.tfvars name_of_setup.tfvars
 4. Run appropriate commands (listed in [Deployment commands](###deployment-commandss) section) with your `.tfvars` file, passing his name to `vars=` variable
 
 
+---
 
 ### Deployment commands
 
