@@ -21,7 +21,7 @@ cp vars-example.tfvars name_of_setup.tfvars
 3. (optional) Create new workspace for state (commands listed in [Workspace comands](###workspace-commands) section)
 3. Choose module for interaction (listed in [Avaiable modules](##avalable-modules) section), you must supply name of module to `module=` variable
 4. Run appropriate commands (listed in [Deployment commands](###deployment-commandss) section) with your `.tfvars` file, passing his name to `vars=` variable
-
+5. After execution of module, Terraform will create file `tfgenhosts-<server_name>-<aws_id>.yml` in module directory. You can use contents of this file to add new instance in local Anisble hosts.yml file
 
 ---
 
