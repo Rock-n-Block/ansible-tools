@@ -32,7 +32,7 @@ cp vars-example.tfvars name_of_setup.tfvars
 
 Validate configuration
 ```bash
-terraform validate module=<name_of_module> vars=<vars_file>
+make validate module=<name_of_module>
 ```
 
 Show changes which will be applied 
@@ -47,7 +47,7 @@ make apply module=<name_of_module> vars=<vars_file>
 
 Show current applied configuration
 ```bash
-make show module=<name_of_module> vars=<vars_file>
+make show module=<name_of_module>
 ```
 
 Remove configuration from servers
@@ -63,7 +63,7 @@ Workspaces are needed to operate current Terraform state
 
 List workspaces
 ```bash
-make workspace_list module=<name_of_module> workspace=<name_of_workspace>
+make workspace_list module=<name_of_module>
 ```
 
 Change workspace
