@@ -13,23 +13,16 @@ This repo contains Terraform configurations for automated tasks
 
 ## Basic usage
 
-### Variables and  configuration
-
-Copy `vars-example.tfvars` to `terraform.tfvars` or other `some-vars-file.tfvars` file
+1. Copy `vars-example.tfvars` to `terraform.tfvars` or other `some-vars-file.tfvars` file
 ```bash
-cp vars-example.tfvars terraform.tfvars
+cp vars-example.tfvars name_of_setup.tfvars
 ```
-Adjust `.tfvars` file according to your needs
+2. Adjust `.tfvars` file according to your needs
+3. (optional) Create new workspace for state (commands listed in [Workspace comands](###workspace-commands) section)
+3. Choose module for interaction (listed in [Avaiable modules](##avalable-modules) section), you must supply name of module to `module=` variable
+4. Run appropriate commands (listed in [Deployment commands](###deployment-commandss) section) with your `.tfvars` file, passing his name to `vars=` variable
 
 
-Terraform automatically loads a number of variable definitions files if they are present:
- - Files named exactly terraform.tfvars
- - Any files with names ending in .auto.tfvars
-
-Or you can use option `-vars-file="new-production.tfvars"` to specify vars file in commands:
-```bash
-terraform apply -var-file="testing.tfvars"
-```
 
 ### Deployment commands
 
