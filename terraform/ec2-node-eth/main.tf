@@ -11,6 +11,7 @@ terraform {
 
 locals {
   module_name = "ec2-node-eth"
+  ebs_device_name = "/dev/sdg"
 }
 
 provider "aws" {
@@ -83,7 +84,7 @@ resource "aws_instance" "app_server" {
   }
 
   ebs_block_device {
-    device_name = "/dev/sdg"
+    device_name = local.ebs_device_name
     encrypted   = false
     volume_type = var.storage_block_device.volume_type
     volume_size = var.storage_block_device.volume_size
@@ -190,4 +191,34 @@ resource "null_resource" "ansible_provision_deps" {
       HOST = "'${aws_instance.app_server.tags["canonical_name"]}'"
     }
   }
+}
+
+resource "null_resource" "ansible_provision_mount_ebs" {
+    depends_on = [local_file.ansible_hosts]
+    count = var.run_ansible_mount_ebs? 1 : 0
+    
+    # We making ssh connection in order to wait until intance will be actually reachable
+    provisioner "remote-exec" {
+      connection {
+        type = "ssh"
+        host = aws_eip.app_server_eip.public_ip
+        user = "ubuntu"
+        agent = var.ssh_agent_support
+        private_key = var.ssh_agent_support? "" : file(var.instance_ssh_key_priv_file) 
+      }
+
+      inline = ["echo 'connected!'"]
+    }
+  
+    # Mount EBS volume through Ansible
+    provisioner "local-exec" {
+      command = "cd $ANSIBLE_PATH && make $ANSIBLE_COMMAND hosts_path=$HOSTS_PATH host=$HOST"
+      environment = {
+        ANSIBLE_PATH = "../../ansible"
+        ANSIBLE_COMMAND = "mount_second_ebs"
+        HOSTS_PATH = "../terraform/${local.module_name}/${local_file.ansible_hosts.filename}"
+        HOST = "'${aws_instance.app_server.tags["canonical_name"]}'"
+      }
+    }
+
 }

@@ -126,5 +126,6 @@ Set variable `run_ansible_deps: true' to run dependencies installation through A
 ### Terraform ec2-node-eth module description
 
 Similar to ec2-base module, differences are:
- - Changed default values for instance type, volume sizes
- - Added secondary storage device
+ - Default values for instance type, volume sizes are modified to run Go-Ethereum
+ - Added secondary storage device assignment
+ - Secondary storage device is automatically formatted and persistently mounted

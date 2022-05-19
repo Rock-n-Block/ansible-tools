@@ -2,7 +2,8 @@ hosts_path := hosts.yml
 ansible_cfg := ANSIBLE_CONFIG=$(shell pwd)/ansible.cfg
 
 setup:
-	$(ansible_cfg) ansible-galaxy install -r requirements.yml --force
+	$(ansible_cfg) ansible-galaxy role install -r requirements.yml --force
+	$(ansible_cfg) ansible-galaxy collection install -r requirements.yml --force
 
 nginx:
 	test $(host)
@@ -36,3 +37,7 @@ sync-dir:
 	test $(src)
 	test $(dest)
 	$(ansible_cfg) ansible-playbook -i=$(hosts_path) -l $(host) playbooks/sync_dir.yml --extra-vars "src=$(src) dest=$(dest)"
+
+mount_second_ebs:
+	test $(host)
+	$(ansible_cfg) ansible-playbook -i=$(hosts_path) -l $(host) playbooks/mount_second_ebs.yml

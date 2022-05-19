@@ -107,3 +107,9 @@ variable "run_ansible_deps" {
   type = bool
   default = true
 }
+
+variable "run_ansible_mount_ebs" {
+  description = "Mount secondary EBS volume via Ansible playbook"
+  type = bool
+  default = true
+}

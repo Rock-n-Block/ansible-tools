@@ -1,6 +1,9 @@
 import_key:
 	terraform -chdir=${module} import -var-file=../${vars} aws_key_pair.deployer deployer-key 
 
+init:
+	terraform -chdir=${module} init
+
 validate:
 	terraform -chdir=${module} validate 
 
