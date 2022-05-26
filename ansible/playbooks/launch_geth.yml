@@ -1,0 +1,10 @@
+---
+- name: Launch Go-Ethereum node
+  hosts: all
+  become: yes  
+  tasks:
+    - name: Include vars
+      include_tasks: ../tasks/include_vars.yml
+    - name: Launch Geth Node
+      include_role: 
+        name: rock-n-block.geth-role

@@ -3,6 +3,8 @@ roles:
     src: git+https://github.com/Rock-n-Block/ansible-role-nginx
   - name: rock-n-block.docker-role
     src: git+https://github.com/Rock-n-Block/ansible-role-docker
+  - name: rock-n-block.geth-role
+    src: git+https://github.com/Rock-n-Block/ansible-role-geth
 collections:
   - name: ansible.posix
   - name: community.general

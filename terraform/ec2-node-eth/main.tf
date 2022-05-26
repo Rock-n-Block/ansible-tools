@@ -215,7 +215,37 @@ resource "null_resource" "ansible_provision_mount_ebs" {
       command = "cd $ANSIBLE_PATH && make $ANSIBLE_COMMAND hosts_path=$HOSTS_PATH host=$HOST"
       environment = {
         ANSIBLE_PATH = "../../ansible"
-        ANSIBLE_COMMAND = "mount_second_ebs"
+        ANSIBLE_COMMAND = "mount-second-ebs"
+        HOSTS_PATH = "../terraform/${local.module_name}/${local_file.ansible_hosts.filename}"
+        HOST = "'${aws_instance.app_server.tags["canonical_name"]}'"
+      }
+    }
+
+}
+
+resource "null_resource" "ansible_provision_launch_geth" {
+    depends_on = [local_file.ansible_hosts]
+    count = var.run_ansible_launch_geth? 1 : 0
+    
+    # We making ssh connection in order to wait until intance will be actually reachable
+    provisioner "remote-exec" {
+      connection {
+        type = "ssh"
+        host = aws_eip.app_server_eip.public_ip
+        user = "ubuntu"
+        agent = var.ssh_agent_support
+        private_key = var.ssh_agent_support? "" : file(var.instance_ssh_key_priv_file) 
+      }
+
+      inline = ["echo 'connected!'"]
+    }
+  
+    # Mount EBS volume through Ansible
+    provisioner "local-exec" {
+      command = "cd $ANSIBLE_PATH && make $ANSIBLE_COMMAND hosts_path=$HOSTS_PATH host=$HOST"
+      environment = {
+        ANSIBLE_PATH = "../../ansible"
+        ANSIBLE_COMMAND = "launch-geth"
         HOSTS_PATH = "../terraform/${local.module_name}/${local_file.ansible_hosts.filename}"
         HOST = "'${aws_instance.app_server.tags["canonical_name"]}'"
       }

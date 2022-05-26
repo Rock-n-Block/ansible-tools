@@ -25,4 +25,5 @@ storage_block_device = {
     throughput = 350                                     # (Optional) Throughput for a volume (MiB/s). This is only valid for volume_type of gp3 (default: 125
 }
 run_ansible_deps = true
-run_ansible_mount_ebs = true                 
+run_ansible_mount_ebs = true
+run_ansible_launch_geth = true

@@ -129,3 +129,4 @@ Similar to ec2-base module, differences are:
  - Default values for instance type, volume sizes are modified to run Go-Ethereum
  - Added secondary storage device assignment
  - Secondary storage device is automatically formatted and persistently mounted
+ - Go-Ethereum client deployment and launch (using Docker)

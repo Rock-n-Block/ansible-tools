@@ -113,3 +113,9 @@ variable "run_ansible_mount_ebs" {
   type = bool
   default = true
 }
+
+variable "run_ansible_launch_geth" {
+  description = "Setup and launch Go-Ethereum"
+  type = bool
+  default = true
+}
