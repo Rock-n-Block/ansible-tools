@@ -39,11 +39,16 @@ variable "ssh_agent_support" {
   default       = false
 }
 
-# TODO: fetch AMI id from some typical name
-variable "instance_ami" {
-  description = "Value of Instance AMI for the EC2 instance"
-  type        = string
-  default     = "ami-008e02c1f94100fd9" # Ubuntu 20.04 ARM64 (us-east-2)
+variable "ami_image" {
+  description = "Linux distribution for AMI"
+  type: object({
+    ubuntu_version = string
+    architecture = string
+  })
+  default = {
+    ubuntu_version = "focal-20.04"
+    architecture = "arm64"
+  }
 }
 
 variable "instance_type" {

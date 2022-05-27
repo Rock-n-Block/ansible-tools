@@ -7,7 +7,10 @@ aws_profile_name = ""                                    # AWS Access Key (optio
 instance_ssh_key_file = "/home/user/.ssh/id_rsa.pub"     # SSH Public key to deploy on instance
 instance_ssh_key_priv_file = "/home/user/.ssh/id_rsa"    # Path to SSH Private key
 ssh_agent_support = false                                # (Optional) Enable support for SSH Agent for connections
-instance_ami = "ami-0fb653ca2d3203ac1"                   # Instance AMI ID (default: Ubuntu 20.04 x64)
+ami_image = {
+    ubuntu_version = "focal-20.04"                       # Version of Ubuntu for AMI, named %name%-%version%
+    architecture = "amd64"                               # Type of architecture (amd64/arm64)
+}
 instance_type = "t2.micro"                               # Instance type 
 instance_name = "Terraform EC2 AppServer"                # Instance '"Name" tag 
 instance_organization = "RNB"                            # (Optional) Instance "Organization" tag  (will not be set if  equals "")

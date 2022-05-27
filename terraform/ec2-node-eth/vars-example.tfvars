@@ -7,7 +7,10 @@ aws_profile_name = ""                                    # AWS Access Key (optio
 instance_ssh_key_file = "/home/user/.ssh/id_rsa.pub"     # SSH Public key to deploy on instance
 instance_ssh_key_priv_file = "/home/user/.ssh/id_rsa"    # Path to SSH Private key
 ssh_agent_support = false                                # (Optional) Enable support for SSH Agent for connections
-instance_ami = "ami-008e02c1f94100fd9"                   # Instance AMI ID (default: Ubuntu 20.04 ARM)
+ami_image = {
+    ubuntu_version = "focal-20.04"                       # Version of Ubuntu for AMI, named %name%-%version%
+    architecture = "arm64"                               # Type of architecture (amd64/arm64)
+}
 instance_type = "r6g.xlarge"                               # Instance type 
 instance_name = "Terraform EC2 Geth Node"                # Instance '"Name" tag 
 instance_organization = "RNB"                            # (Optional) Instance "Organization" tag  (will not be set if  equals "")

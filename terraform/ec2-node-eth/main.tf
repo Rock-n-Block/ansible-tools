@@ -64,8 +64,25 @@ output "aws_security_group_name" {
   value       = aws_security_group.app_server_sg.name
 }
 
+data "aws_ami" "ubuntu" {
+  most_recent = true
+
+  filter {
+    name   = "name"
+    values = ["ubuntu/images/hvm-ssd/ubuntu-${var.ami_image.ubuntu_version}-${var.ami_image.architecture}-server-*"]
+  }
+
+  filter {
+    name   = "virtualization-type"
+    values = ["hvm"]
+  }
+
+  owners = ["099720109477"] # Canonical
+}
+
+
 resource "aws_instance" "app_server" {
-  ami           = var.instance_ami
+  ami           = data.aws_ami.ubuntu.id
   instance_type = var.instance_type
   key_name      = aws_key_pair.deployer.key_name
 
@@ -194,8 +211,8 @@ resource "null_resource" "ansible_provision_deps" {
 }
 
 resource "null_resource" "ansible_provision_mount_ebs" {
-    depends_on = [local_file.ansible_hosts]
     count = var.run_ansible_mount_ebs? 1 : 0
+    depends_on = [null_resource.ansible_provision_deps]
     
     # We making ssh connection in order to wait until intance will be actually reachable
     provisioner "remote-exec" {
@@ -224,8 +241,8 @@ resource "null_resource" "ansible_provision_mount_ebs" {
 }
 
 resource "null_resource" "ansible_provision_launch_geth" {
-    depends_on = [local_file.ansible_hosts]
     count = var.run_ansible_launch_geth? 1 : 0
+    depends_on = [null_resource.ansible_provision_mount_ebs]
     
     # We making ssh connection in order to wait until intance will be actually reachable
     provisioner "remote-exec" {
