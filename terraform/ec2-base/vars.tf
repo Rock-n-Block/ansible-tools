@@ -41,13 +41,13 @@ variable "ssh_agent_support" {
 
 variable "ami_image" {
   description = "Linux distribution for AMI"
-  type: object({
+  type = object({
     ubuntu_version = string
     architecture = string
   })
   default = {
     ubuntu_version = "focal-20.04"
-    architecture = "arm64"
+    architecture = "amd64"
   }
 }
 

@@ -1,24 +1,7 @@
-variable "aws_region" {
-  description = "Value of AWS region for account"
-  type        = string
-  default     = "us-east-2"
-}
-
-variable "aws_key_credentials" {
-  description = "Value of AWS Access and Secret Key"
-  type = object({
-    access_key = string
-    secret_key = string
-  })
-  default = {
-    access_key = ""
-    secret_key = ""
-  }
-}
-
-variable "aws_profile_name" {
-  description = "Value of AWS CLI profile"
-  default = "default"
+variable "module_name" {
+  description = "Name of module within tools"
+  type = string
+  default = "core-ec2"
 }
 
 variable "instance_ssh_key_file" {
@@ -47,20 +30,20 @@ variable "ami_image" {
   })
   default = {
     ubuntu_version = "focal-20.04"
-    architecture = "arm64"
+    architecture = "amd64"
   }
 }
 
 variable "instance_type" {
   description = "Value of Instance Type for the EC2 instance"
   type        = string
-  default     = "c6g.xlarge"
+  default     = "t2.micro"
 }
 
 variable "instance_name" {
   description = "Value of the Name tag for the EC2 instance"
   type        = string
-  default     = "Geth Node"
+  default     = "Terraform App Server"
 }
 
 variable "instance_organization" {
@@ -70,9 +53,9 @@ variable "instance_organization" {
 }
 
 variable "security_rules_ports" {
-  description = "List of ports to apply in security rules"
+  description = "Listt of ports to apply in security rules"
   type        = list(any)
-  default     = [22, 80, 443, 8545, 8546]
+  default     = [22, 80, 443]
 }
 
 variable "root_block_device" {
@@ -84,45 +67,27 @@ variable "root_block_device" {
     throughput = number
   })
   default = {
-    volume_type = "gp3"
-    volume_size = 80
-    iops = 4000
-    throughput = 350
+    volume_type = "gp2"
+    volume_size = 30
+    iops = 3000
+    throughput = 125
   }
 }
 
-variable "storage_block_device" {
+variable "storage_block_devices" {
   description = "Values of parameters for root disk"
-  type = object({
+  type = list(object({
     name = string
     volume_type = string
     volume_size = number
     iops = number
     throughput = number
-  })
-  default = {
-    name = "/dev/sdg"
-    volume_type = "gp3"
-    volume_size = 800
-    iops = 4000
-    throughput = 350
-  }
+  }))
+  default = []
 }
 
 variable "run_ansible_deps" {
   description = "Installs deps via Ansible playbook"
-  type = bool
-  default = true
-}
-
-variable "run_ansible_mount_ebs" {
-  description = "Mount secondary EBS volume via Ansible playbook"
-  type = bool
-  default = true
-}
-
-variable "run_ansible_launch_geth" {
-  description = "Setup and launch Go-Ethereum"
   type = bool
   default = true
 }
