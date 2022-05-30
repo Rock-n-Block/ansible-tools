@@ -12,3 +12,4 @@ ansible/vars/*
 **tfgenhosts*
 
 !**vars-example.tfvars
+!**vars-example.*.tfvars
