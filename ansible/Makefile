@@ -48,3 +48,7 @@ mount-second-ebs:
 launch-geth:
 	test $(host)
 	$(ansible_cfg) ansible-playbook -i=$(hosts_path) -l $(host) playbooks/launch_geth.yml
+
+polygon-deps-setup:
+	test $(host)
+	$(ansible_cfg) ansible-playbook -i=$(hosts_path) -l $(host) playbooks/polygon_node_deps.yml
