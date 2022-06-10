@@ -30,4 +30,4 @@ storage_block_device = {
 }
 run_ansible_deps = true
 run_ansible_mount_ebs = true
-run_ansible_launch_geth = false
+run_ansible_polygon_deps_setup = true

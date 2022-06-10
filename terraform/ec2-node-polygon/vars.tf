@@ -121,7 +121,7 @@ variable "run_ansible_mount_ebs" {
   default = true
 }
 
-variable "run_ansible_polgon_deps_setup" {
+variable "run_ansible_polygon_deps_setup" {
   description = "Setup deps for Polygon node"
   type = bool
   default = true

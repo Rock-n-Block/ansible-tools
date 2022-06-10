@@ -70,7 +70,7 @@ resource "null_resource" "ansible_provision_mount_ebs" {
 }
 
 resource "null_resource" "ansible_provision_bsc_deps_setup" {
-    count = var.run_ansible_polgon_deps_setup? 1 : 0
+    count = var.run_ansible_bsc_deps_setup? 1 : 0
     depends_on = [null_resource.ansible_provision_mount_ebs]
     
     # We making ssh connection in order to wait until intance will be actually reachable
