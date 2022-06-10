@@ -12,22 +12,22 @@ ami_image = {
     architecture = "arm64"                               # Type of architecture (amd64/arm64)
 }
 instance_type = "c6g.2xlarge"                               # Instance type 
-instance_name = "Terraform EC2 Polygon Node"                # Instance '"Name" tag 
+instance_name = "Terraform EC2 BSC Node"                # Instance '"Name" tag 
 instance_organization = "RNB"                            # (Optional) Instance "Organization" tag  (will not be set if  equals "")
 security_rules_ports = [22, 80, 443, 26656, 30303]                     # Ports for security group
 root_block_device = {
     volume_type = "gp3"                                  # Type of volume
     volume_size = 80                                     # Size of root volume
-    iops = 4000                                          # (Optional) Amount of provisioned IOPS. Only valid for volume_type of io1, io2 or gp3 (default: 3000)
+    iops = 8000                                          # (Optional) Amount of provisioned IOPS. Only valid for volume_type of io1, io2 or gp3 (default: 3000)
     throughput = 350                                     # (Optional) Throughput for a volume (MiB/s). This is only valid for volume_type of gp3 (default: 125
 }
 storage_block_device = {
     name = "/dev/sdg"                                    # Name of device (must be /dev/sd[f-p])
     volume_type = "gp3"                                  # Type of volume
-    volume_size = 1300                                   # Size of storage volume
-    iops = 4000                                          # (Optional) Amount of provisioned IOPS. Only valid for volume_type of io1, io2 or gp3 (default: 3000)
+    volume_size = 2000                                   # Size of storage volume
+    iops = 8000                                          # (Optional) Amount of provisioned IOPS. Only valid for volume_type of io1, io2 or gp3 (default: 3000)
     throughput = 350                                     # (Optional) Throughput for a volume (MiB/s). This is only valid for volume_type of gp3 (default: 125
 }
 run_ansible_deps = true
 run_ansible_mount_ebs = true
-run_ansible_launch_geth = false
+run_ansible_bsc_deps_setup = true

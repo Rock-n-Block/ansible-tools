@@ -52,3 +52,7 @@ launch-geth:
 polygon-deps-setup:
 	test $(host)
 	$(ansible_cfg) ansible-playbook -i=$(hosts_path) -l $(host) playbooks/polygon_node_deps.yml
+
+bsc-deps-setup:
+	test $(host)
+	$(ansible_cfg) ansible-playbook -i=$(hosts_path) -l $(host) playbooks/bsc_node_deps.yml
