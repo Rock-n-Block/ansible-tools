@@ -1,8 +1,13 @@
 hosts_path := hosts.yml
 ansible_cfg := ANSIBLE_CONFIG=$(shell pwd)/ansible.cfg
 
-setup:
-	$(ansible_cfg) ansible-galaxy install -r requirements.yml --force
+setup-roles:
+	$(ansible_cfg) ansible-galaxy role install -r requirements.yml --force
+
+setup-collections:
+	$(ansible_cfg) ansible-galaxy collection install -r requirements.yml --force
+
+setup: setup-roles setup-collections
 
 nginx:
 	test $(host)
@@ -15,7 +20,6 @@ dns:
 	test $(zone)
 	test $(account)
 	$(ansible_cfg) ansible-playbook -i=$(hosts_path) playbooks/dns.yml --extra-vars "record=$(record) zone=$(zone) host=$(host) account=$(account)"
-
 
 deps:
 	test $(host)
@@ -36,3 +40,19 @@ sync-dir:
 	test $(src)
 	test $(dest)
 	$(ansible_cfg) ansible-playbook -i=$(hosts_path) -l $(host) playbooks/sync_dir.yml --extra-vars "src=$(src) dest=$(dest)"
+
+mount-second-ebs:
+	test $(host)
+	$(ansible_cfg) ansible-playbook -i=$(hosts_path) -l $(host) playbooks/mount_second_ebs.yml
+
+launch-geth:
+	test $(host)
+	$(ansible_cfg) ansible-playbook -i=$(hosts_path) -l $(host) playbooks/launch_geth.yml
+
+polygon-deps-setup:
+	test $(host)
+	$(ansible_cfg) ansible-playbook -i=$(hosts_path) -l $(host) playbooks/polygon_node_deps.yml
+
+bsc-deps-setup:
+	test $(host)
+	$(ansible_cfg) ansible-playbook -i=$(hosts_path) -l $(host) playbooks/bsc_node_deps.yml

@@ -1,0 +1,13 @@
+roles:
+  - name: rock-n-block.nginx-role
+    src: git+https://github.com/Rock-n-Block/ansible-role-nginx
+  - name: rock-n-block.docker-role
+    src: git+https://github.com/Rock-n-Block/ansible-role-docker
+  - name: rock-n-block.geth-role
+    src: git+https://github.com/Rock-n-Block/ansible-role-geth
+  - name: rock-n-block.geth-bsc-role
+    src: git+https://github.com/Rock-n-Block/ansible-role-geth
+    version: bsc
+collections:
+  - name: ansible.posix
+  - name: community.general

@@ -1,0 +1,41 @@
+---
+- name: Create user 
+  hosts: all
+  become: yes
+  tasks:
+    - name: Include vars
+      include_tasks: ../tasks/include_vars.yml
+  
+    - name: Create group
+      ansible.builtin.group:
+        name: polygon
+        state: present
+
+    - name: Create user
+      ansible.builtin.user:
+        name: polygon
+        shell: /bin/bash
+        group: polygon
+        groups:
+          - sudo
+        home: /mnt/data/polygon
+
+
+    - name: Add user to sudoers
+      lineinfile:
+        path: /etc/sudoers
+        line: "polygon ALL=(ALL) NOPASSWD: ALL"
+
+    - name: Make SSH directory
+      file:
+        path: /mnt/data/polygon/.ssh
+        state: directory
+
+    - name: Copy existing SSH pubkey to new home
+      copy:
+        src: /home/ubuntu/.ssh/authorized_keys
+        dest: /mnt/data/polygon/.ssh/authorized_keys
+        remote_src: yes
+        owner: polygon
+        group: polygon
+        

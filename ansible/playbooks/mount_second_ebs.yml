@@ -1,0 +1,23 @@
+---
+- name: Mount secondary EBS volume on AWS instances
+  hosts: all
+  become: yes
+  tasks:
+    - name: Include vars
+      include_tasks: ../tasks/include_vars.yml
+    - name: Create filesystem
+      filesystem:
+        fstype: ext4
+        dev: "/dev/nvme1n1"
+    - name: Mount device and modify fstab
+      ansible.posix.mount:
+        backup: yes
+        state: mounted
+        src: "/dev/nvme1n1"
+        path: /mnt/data/
+        fstype: ext4
+        opts: defaults,nofail
+        dump: 0
+        passno: 2
+        boot: yes
+    
